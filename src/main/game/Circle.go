@@ -5,6 +5,7 @@ import (
 	"github.com/go-gl/mathgl/mgl32"
 	"main/graphics"
 	"main/utils"
+  "math"
 )
 
 var (
@@ -62,18 +63,21 @@ func (circle *Circle) Draw(worldTrans mgl32.Mat4) {
 
 func (circle *Circle) Update(delta float32) {
 	circle.position = circle.position.Add(circle.velocity.Mul(delta))
-	len := circle.velocity.Len()
-	if len != 0 {
-		if circle.velocity.Len() < acceleration*delta {
+	vLen := circle.velocity.Len()
+	if vLen != 0 {
+		if vLen < acceleration*delta {
 			circle.velocity = mgl32.Vec2{0.0, 0.0}
 		} else {
 			circle.velocity = circle.velocity.Add(circle.velocity.Normalize().Mul(acceleration * delta))
 		}
 	}
 
+	vLen = circle.velocity.Len()
 	if circle.position.Len() > SIZE - circle.size {
 		circle.position = circle.position.Normalize().Mul(SIZE - circle.size)
-		circle.velocity = circle.velocity.Mul(-1)
+		a := math.Acos(float64(circle.position.Normalize().Dot(circle.velocity.Normalize())))
+		rot := mgl32.Rotate2D(float32(a))
+    circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))
 	}
 
 	circle.object.Update(circle.position, circle.size)
