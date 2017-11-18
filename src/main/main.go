@@ -9,21 +9,15 @@ import (
 	"runtime"
 )
 
-const (
-	WIDTH  = 800.0
-	HEIGHT = 600.0
-)
-
 func init() {
 	runtime.LockOSThread()
 }
 
 func main() {
-	program = graphics.NewGlfwProgram("World", WIDTH, HEIGHT, draw, update)
+	program = graphics.NewGlfwProgram("World", game.WIDTH, game.HEIGHT, draw, update)
 	defer program.Terminate()
 
-	cam = utils.NewOrthographicCamera(game.SIZE*WIDTH/HEIGHT, game.SIZE)
-	cam.ZOOM = 2
+	cam = utils.NewOrthographicCamera(2 * game.SIZE*game.WIDTH/game.HEIGHT, 2 * game.SIZE)
 	world = game.NewWorld(cam)
 
 	for !program.Window.ShouldClose() {

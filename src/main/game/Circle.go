@@ -18,6 +18,7 @@ var (
 )
 
 type Circle struct {
+	id int
 	object   utils.GameObject
 	owns bool
 	position mgl32.Vec2
@@ -26,7 +27,7 @@ type Circle struct {
 	color    mgl32.Vec3
 }
 
-func NewCircle(owns bool, size float32, position mgl32.Vec2, velocity mgl32.Vec2, color mgl32.Vec3) Circle {
+func NewCircle(id int, owns bool, size float32, position mgl32.Vec2, velocity mgl32.Vec2, color mgl32.Vec3) *Circle {
 	if !isInit {
 		println("Init circle")
 		isInit = true
@@ -37,7 +38,9 @@ func NewCircle(owns bool, size float32, position mgl32.Vec2, velocity mgl32.Vec2
 		colorLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_Color\x00"))
 	}
 
-	return Circle{
+	circle := new (Circle)
+	*circle = Circle{
+		id,
 		utils.NewObject(&mesh, size, objLoc),
 		owns,
 		position,
@@ -45,6 +48,8 @@ func NewCircle(owns bool, size float32, position mgl32.Vec2, velocity mgl32.Vec2
 		size,
 		color,
 	}
+
+	return circle
 }
 
 func (circle *Circle) Draw(worldTrans mgl32.Mat4) {
