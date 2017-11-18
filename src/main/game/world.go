@@ -2,13 +2,15 @@ package game
 
 import (
 	"github.com/go-gl/gl/v4.2-core/gl"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/mathgl/mgl32"
 	"main/graphics"
 	"main/utils"
-	"github.com/go-gl/glfw/v3.2/glfw"
+	"math"
 )
 
 var circleCounter int = -1
+
 func nextId() int {
 	circleCounter++
 	return circleCounter
@@ -41,8 +43,8 @@ func NewWorld(camera utils.OrthographicCamera) World {
 		make(map[int]*Circle),
 	}
 
-	player := NewCircle(nextId(),true, SIZE / 4, mgl32.Vec2{0.0 ,0.0}, mgl32.Vec2{0.0, 0.0}, mgl32.Vec3{1.0, 0.0, 0.0})
-	result.circles[player.id]= player
+	player := NewCircle(nextId(), true, SIZE/4, mgl32.Vec2{0.0, 0.0}, mgl32.Vec2{0.0, 0.0}, mgl32.Vec3{1.0, 0.0, 0.0})
+	result.circles[player.id] = player
 
 	return result
 }
@@ -57,6 +59,7 @@ func (world *World) Update(delta float32, window glfw.Window) {
 	}
 
 	world.processMouse(window)
+	world.processCollision()
 }
 
 func (world *World) Draw(worldTrans mgl32.Mat4) {
@@ -72,15 +75,15 @@ func (world *World) Draw(worldTrans mgl32.Mat4) {
 	}
 }
 
-
-var(
+var (
 	lastMouseState = false
-	choosenId = -1
+	choosenId      = -1
 )
+
 func (world *World) processMouse(window glfw.Window) {
 	state := window.GetMouseButton(glfw.MouseButtonLeft) == glfw.Press
 	x64, y64 := window.GetCursorPos()
-	position := mgl32.Vec2{float32((x64 / WIDTH - 0.5) * 2 * SIZE*WIDTH/HEIGHT), float32(-(y64 / HEIGHT - 0.5) * SIZE * 2)}
+	position := mgl32.Vec2{float32((x64/WIDTH - 0.5) * 2 * SIZE * WIDTH / HEIGHT), float32(-(y64/HEIGHT - 0.5) * SIZE * 2)}
 	println(int(position.X()*100), int(position.Y()*100))
 
 	if state && !lastMouseState {
@@ -96,23 +99,52 @@ func (world *World) processMouse(window glfw.Window) {
 	} else if !state && lastMouseState {
 		lastMouseState = false
 		println("Mouse Up")
-		if choosenId != -1 &&  world.circles[choosenId] != nil {
+		if choosenId != -1 && world.circles[choosenId] != nil {
 			newSize := world.circles[choosenId].size / 2
 			direction := world.circles[choosenId].position.Sub(position).Normalize()
 			power := world.circles[choosenId].position.Sub(position).Len()
 			first := NewCircle(
 				nextId(), true, newSize,
 				world.circles[choosenId].position.Add(direction.Mul(newSize)),
-				direction.Mul(power * 2), world.circles[choosenId].color )
+				direction.Mul(power*2), world.circles[choosenId].color)
 			second := NewCircle(
 				nextId(), true, newSize,
 				world.circles[choosenId].position.Add(direction.Mul(-newSize)),
-				direction.Mul(-power * 2), world.circles[choosenId].color )
+				direction.Mul(-power*2), world.circles[choosenId].color)
 			world.circles[first.id] = first
 			world.circles[second.id] = second
 
 			world.circles[choosenId] = nil
 			choosenId = -1
+		}
+	}
+}
+
+func (world *World) processCollision() {
+	for i := 0; i < circleCounter; i++ {
+		for j := i + 1; j <= circleCounter; j++ {
+			if world.circles[i] != nil && world.circles[j] != nil {
+				first := world.circles[i]
+				second := world.circles[j]
+				dist := first.position.Sub(second.position).Len()
+				ratio := math.Max(float64(first.size / second.size), float64(second.size / first.size))
+
+				if ratio < 1.2 && dist < first.size + second.size {
+					u1, u2 := first.velocity, second.velocity
+					first.velocity = u1.Mul(first.size - first.size).Add(u2.Mul(2 * second.size)).Mul(1/(first.size + second.size))
+					second.velocity = u2.Mul(second.size - first.size).Add(u1.Mul(2 * first.size)).Mul(1/(first.size + second.size))
+				}
+
+				if first.size < second.size {
+					first, second = second, first
+				}
+
+				if ratio >= 1.2 && dist < first.size {
+					first.size += second.size
+					world.circles[second.id] = nil
+				}
+
+			}
 		}
 	}
 }

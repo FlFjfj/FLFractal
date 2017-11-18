@@ -18,9 +18,9 @@ var (
 )
 
 type Circle struct {
-	id int
+	id       int
 	object   utils.GameObject
-	owns bool
+	owns     bool
 	position mgl32.Vec2
 	velocity mgl32.Vec2
 	size     float32
@@ -38,7 +38,7 @@ func NewCircle(id int, owns bool, size float32, position mgl32.Vec2, velocity mg
 		colorLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_Color\x00"))
 	}
 
-	circle := new (Circle)
+	circle := new(Circle)
 	*circle = Circle{
 		id,
 		utils.NewObject(&mesh, size, objLoc),
@@ -71,7 +71,7 @@ func (circle *Circle) Update(delta float32) {
 		}
 	}
 
-	if circle.position.Len() > SIZE - circle.size {
+	if circle.position.Len() > SIZE-circle.size {
 		circle.position = circle.position.Normalize().Mul(SIZE - circle.size)
 		circle.velocity = circle.velocity.Mul(-1)
 	}

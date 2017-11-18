@@ -17,7 +17,7 @@ func main() {
 	program = graphics.NewGlfwProgram("World", game.WIDTH, game.HEIGHT, draw, update)
 	defer program.Terminate()
 
-	cam = utils.NewOrthographicCamera(2 * game.SIZE*game.WIDTH/game.HEIGHT, 2 * game.SIZE)
+	cam = utils.NewOrthographicCamera(2*game.SIZE*game.WIDTH/game.HEIGHT, 2*game.SIZE)
 	world = game.NewWorld(cam)
 
 	for !program.Window.ShouldClose() {
@@ -27,8 +27,8 @@ func main() {
 
 var (
 	program graphics.Program
-	cam   utils.OrthographicCamera
-	world game.World
+	cam     utils.OrthographicCamera
+	world   game.World
 )
 
 func update(delta float32) {

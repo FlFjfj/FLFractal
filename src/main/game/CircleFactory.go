@@ -30,10 +30,10 @@ func (factory *CircleFactory) Update(delta float32, path *map[int]*Circle) {
 
 		size := randBetween(minSize*SIZE, maxSize*SIZE)
 
-		circle :=  NewCircle(
-			nextId(),false, size,
-			mgl32.Vec2{randBetween(0, SIZE - size), randBetween(0, SIZE - size)},
-			mgl32.Vec2{randBetween(0, SIZE * 4), randBetween(0, SIZE * 4)},
+		circle := NewCircle(
+			nextId(), false, size,
+			mgl32.Vec2{randBetween(0, SIZE-size), randBetween(0, SIZE-size)},
+			mgl32.Vec2{randBetween(0, SIZE*4), randBetween(0, SIZE*4)},
 			mgl32.Vec3{0.0, 0.6, 0.0})
 		(*path)[circle.id] = circle
 	}
