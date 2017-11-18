@@ -21,7 +21,7 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 
 	glfw.WindowHint(glfw.Resizable, glfw.False)
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
+	glfw.WindowHint(glfw.ContextVersionMinor, 2)
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 	Window, err := glfw.CreateWindow(width, height, title, nil, nil)
@@ -34,6 +34,8 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
+
+	gl.Enable(gl.DEPTH_TEST)
 
 	return Program{Window, draw, update, time.Now()}
 }
