@@ -1,11 +1,11 @@
 package graphics
 
 import (
-	"os"
+	"github.com/go-gl/gl/v4.2-core/gl"
 	"image"
 	"image/draw"
 	_ "image/png"
-	"github.com/go-gl/gl/v4.2-core/gl"
+	"os"
 )
 
 type Texture uint32
@@ -15,27 +15,27 @@ func (tex Texture) Bind(id int) {
 }
 
 func (tex Texture) Unbind(id int) {
-	gl.BindTexture(uint32(id), 0);
+	gl.BindTexture(uint32(id), 0)
 }
 
 func GetTexture(path string) Texture {
 	file, err := os.Open(path)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
-	
+
 	img, _, err := image.Decode(file)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
-	
+
 	rgba := image.NewRGBA(img.Bounds())
 	if rgba.Stride != rgba.Rect.Size().X*4 {
 		panic("unsupported stride")
 	}
-	
+
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{0, 0}, draw.Src)
-	
+
 	var texture uint32
 	gl.GenTextures(1, &texture)
 	gl.ActiveTexture(gl.TEXTURE0)
@@ -54,6 +54,6 @@ func GetTexture(path string) Texture {
 		gl.RGBA,
 		gl.UNSIGNED_BYTE,
 		gl.Ptr(rgba.Pix))
-	
+
 	return Texture(texture)
 }
