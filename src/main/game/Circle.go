@@ -15,9 +15,10 @@ var (
 	objLoc       int32
 	projLoc      int32
 	colorLoc     int32
+	deltaLoc     int32
 	mesh         utils.Mesh
 	acceleration float32 = -7
-)
+	)
 
 type Circle struct {
 	id       int
@@ -37,6 +38,7 @@ func NewCircle(id int, owner int, size float32, position mgl32.Vec2, velocity mg
 		objLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_ObjTrans\x00"))
 		projLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_ProjTrans\x00"))
 		colorLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_Color\x00"))
+		deltaLoc = gl.GetUniformLocation(uint32(circleShader), gl.Str("u_Delta\x00"))
 	}
 
 	circle := new(Circle)
@@ -53,10 +55,11 @@ func NewCircle(id int, owner int, size float32, position mgl32.Vec2, velocity mg
 	return circle
 }
 
-func (circle *Circle) Draw(worldTrans mgl32.Mat4) {
+func (circle *Circle) Draw(worldTrans mgl32.Mat4, lastDelta float32) {
 	circleShader.Begin()
 	gl.UniformMatrix4fv(projLoc, 1, false, &worldTrans[0])
 	gl.Uniform3fv(colorLoc, 1, &circle.color[0])
+	gl.Uniform1f(deltaLoc, lastDelta)
 	circle.object.Draw()
 	circleShader.End()
 }

@@ -4,6 +4,7 @@ uniform mat4 u_ProjTrans;
 uniform mat4 u_ObjTrans;
 
 uniform vec3 u_Color;
+uniform float u_Delta;
 
 layout (location = 0) in vec4 a_Position;
 layout (location = 1) in vec2 a_TexCoord;

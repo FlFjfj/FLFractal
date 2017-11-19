@@ -56,6 +56,7 @@ func NewWorld(camera utils.OrthographicCamera) World {
 }
 
 func (world *World) Update(delta float32, window glfw.Window) {
+	lastDelta += delta
 	for key := range world.circles {
 		if world.circles[key] != nil {
 			world.circles[key].Update(delta)
@@ -75,12 +76,13 @@ func (world *World) Draw(worldTrans mgl32.Mat4) {
 
 	for key := range world.circles {
 		if world.circles[key] != nil {
-			world.circles[key].Draw(worldTrans)
+			world.circles[key].Draw(worldTrans, lastDelta)
 		}
 	}
 }
 
 var (
+	lastDelta float32 = 0
 	lastMouseState = false
 	choosenId      = -1
 )
