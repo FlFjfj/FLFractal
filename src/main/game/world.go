@@ -98,16 +98,14 @@ func (world *World) processMouse(window glfw.Window, actionQueue chan Common.Act
 		for _, circle := range world.circles {
 			if circle != nil && circle.owner == world.owner_id && circle.position.Sub(position).Len() < circle.size {
 				choosenId = circle.id
+				break
 			}
 		}
 
 	} else if !state && lastMouseState {
 		lastMouseState = false
 		if choosenId != -1 && world.circles[choosenId] != nil {
-			direction := world.circles[choosenId].position.Sub(position)
-
-			actionQueue <- Common.ActionMessage{choosenId, direction.X(), direction.Y()}
-
+			actionQueue <- Common.ActionMessage{choosenId, position.X(), position.Y()}
 			choosenId = -1
 		}
 	}
@@ -131,15 +129,6 @@ func (world *World) processCollision() {
 					first.velocity = first.velocity.Sub(projD)
 					second.velocity = second.velocity.Add(projD)
 				}
-
-				/*if first.size < second.size {
-					first, second = second, first
-				}
-
-				if ratio >= 1.2 && dist < first.size {
-					first.size += second.size
-					world.circles[second.id] = nil
-				}*/
 			}
 		}
 	}
