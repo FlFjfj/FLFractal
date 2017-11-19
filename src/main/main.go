@@ -7,6 +7,7 @@ import (
 	"main/graphics"
 	"main/utils"
 	"runtime"
+  "main/game/net"
 )
 
 func init() {
@@ -23,6 +24,7 @@ func main() {
 	for !program.Window.ShouldClose() {
 		program.Update()
 	}
+	net.Connection.Close()
 }
 
 var (
