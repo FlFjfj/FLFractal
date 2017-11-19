@@ -23,7 +23,6 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)
 	glfw.WindowHint(glfw.ContextVersionMinor, 2)
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
 	Window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	if err != nil {
@@ -36,9 +35,10 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 		panic(err)
 	}
 
-	//l.Enable(gl.DEPTH_TEST)
+	//gl.Enable(gl.DEPTH_TEST)
 	gl.Enable(gl.BLEND)
-	//gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
 
 	return Program{Window, draw, update, time.Now()}
 }

@@ -21,8 +21,8 @@ func main() {
 	world = game.NewWorld(cam)
 
 	for !program.Window.ShouldClose() {
-		program.Update()
-	}
+    program.Update()
+  }
 }
 
 var (

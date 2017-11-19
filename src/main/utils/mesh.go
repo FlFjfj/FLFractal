@@ -69,12 +69,12 @@ func IdentCircle(segment int) []float32 {
 		data[i*3*9+9+2] = 0
 		data[i*3*9+9+3] = 1
 
-		data[i*3*9+9+4] = 0
-		data[i*3*9+9+5] = 0
-		data[i*3*9+9+6] = 1
+		data[i*3*9+9+4] = data[i*3*9+9+0]
+		data[i*3*9+9+5] = data[i*3*9+9+1]
+		data[i*3*9+9+6] = 0
 
-		data[i*3*9+9+7] = data[i*3*9+9+0]
-		data[i*3*9+9+8] = data[i*3*9+9+1]
+		data[i*3*9+9+7] = data[i*3*9+9+0]/2 + 0.5
+		data[i*3*9+9+8] = data[i*3*9+9+1]/2 + 0.5
 		//SECOND
 		angle = 2.0 * math.Pi / float64(segment) * float64(i+1)
 		data[i*3*9+18+0] = float32(math.Cos(angle))
@@ -82,12 +82,12 @@ func IdentCircle(segment int) []float32 {
 		data[i*3*9+18+2] = 0
 		data[i*3*9+18+3] = 1
 
-		data[i*3*9+18+4] = 0
-		data[i*3*9+18+5] = 0
-		data[i*3*9+18+6] = 1
+		data[i*3*9+18+4] = data[i*3*9+18+0]
+		data[i*3*9+18+5] = data[i*3*9+18+1]
+		data[i*3*9+18+6] = 0
 
-		data[i*3*9+18+7] = data[i*3*9+18+0]
-		data[i*3*9+18+8] = data[i*3*9+18+1]
+		data[i*3*9+18+7] = data[i*3*9+18+0]/2 + 0.5
+		data[i*3*9+18+8] = data[i*3*9+18+1]/2 + 0.5
 	}
 
 	return data

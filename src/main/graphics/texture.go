@@ -11,7 +11,7 @@ import (
 type Texture uint32
 
 func (tex Texture) Bind(id int) {
-	gl.BindTexture(uint32(id), uint32(tex))
+	gl.BindTexture(gl.TEXTURE_2D, uint32(tex))
 }
 
 func (tex Texture) Unbind(id int) {

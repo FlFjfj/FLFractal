@@ -18,6 +18,8 @@ var (
 	deltaLoc     int32
 	mesh         utils.Mesh
 	acceleration float32 = -7
+	texture  graphics.Texture
+	texLoc  int32
 	)
 
 type Circle struct {
@@ -32,6 +34,7 @@ type Circle struct {
 
 func NewCircle(id int, owner int, size float32, position mgl32.Vec2, velocity mgl32.Vec2, color mgl32.Vec3) *Circle {
 	if !isInit {
+    texture = graphics.GetTexture("assets/texture/pumpkin.png")
 		isInit = true
 		mesh = utils.NewMesh(utils.IdentCircle(20))
 		circleShader = graphics.NewShaderProgram("assets/shader/circleVert.glsl", "assets/shader/circleFrag.glsl")
@@ -60,7 +63,10 @@ func (circle *Circle) Draw(worldTrans mgl32.Mat4, lastDelta float32) {
 	gl.UniformMatrix4fv(projLoc, 1, false, &worldTrans[0])
 	gl.Uniform3fv(colorLoc, 1, &circle.color[0])
 	gl.Uniform1f(deltaLoc, lastDelta)
+	//gl.Uniform1i(texLoc, 0)
+	texture.Bind(0)
 	circle.object.Draw()
+	texture.Unbind(0)
 	circleShader.End()
 }
 
