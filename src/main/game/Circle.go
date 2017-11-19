@@ -62,9 +62,12 @@ func (circle *Circle) Draw(worldTrans mgl32.Mat4) {
 }
 
 func (circle *Circle) Update(delta float32) {
-	circle.position = circle.position.Add(circle.velocity.Mul(delta))
+  if circle.velocity.Len() >= 0.001 {
+    circle.position = circle.position.Add(circle.velocity.Mul(delta))
+  }
+
 	vLen := circle.velocity.Len()
-	if vLen != 0 {
+	if vLen  >= 0.001 {
 		if vLen < acceleration*delta {
 			circle.velocity = mgl32.Vec2{0.0, 0.0}
 		} else {
