@@ -85,5 +85,5 @@ func (circle *Circle) Update(delta float32) {
 		circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))
 	}
 
-	circle.object.Update(circle.position, circle.size)
+	circle.object.Update(mgl32.Vec3{circle.position.X(), circle.position.Y(), 0.0}, circle.size)
 }

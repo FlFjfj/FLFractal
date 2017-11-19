@@ -37,7 +37,7 @@ func update(delta float32) {
 }
 
 func draw() {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	world.Draw(cam.Combined())
 
 }

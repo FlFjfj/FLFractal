@@ -162,6 +162,7 @@ func NewServerWorld() *ServerWorld {
 
 func (world *ServerWorld) Update(delta float32) {
 	world.mutex.Lock()
+	world.factory.Update(delta, world)
 	//println("lock func (world *ServerWorld) Update(delta float32) {")
 	for key := range world.circles {
 		if world.circles[key] != nil {

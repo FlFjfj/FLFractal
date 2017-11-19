@@ -14,7 +14,7 @@ type GameObject struct {
 
 func NewObject(mesh *Mesh, size float32, transform_loc int32) GameObject {
 	obj := GameObject{mesh, 0, mgl32.Ident4(), transform_loc}
-	obj.Update(mgl32.Vec2{0.0, 0.0}, size)
+	obj.Update(mgl32.Vec3{0.0, 0.0, 0.0}, size)
 	return obj
 }
 
@@ -23,7 +23,7 @@ func (object *GameObject) Draw() {
 	object.mesh.Draw()
 }
 
-func (object *GameObject) Update(pos mgl32.Vec2, size float32) {
+func (object *GameObject) Update(pos mgl32.Vec3, size float32) {
 	object.size = size
 	object.transform = mgl32.Translate3D(pos.X(), pos.Y(), 0).Mul4(mgl32.Scale3D(size, size, 1))
 }

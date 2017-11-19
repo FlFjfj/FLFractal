@@ -37,6 +37,7 @@ func NewWorld(camera utils.OrthographicCamera) World {
 	projectionLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_ProjTrans\x00"))
 	circle := utils.NewMesh(utils.IdentCircle(100))
 	object := utils.NewObject(&circle, Common.SIZE, transformLoc)
+	object.Update(mgl32.Vec3{0.0,0.0, 1.0}, Common.SIZE)
 
 	result := World{
 		camera,

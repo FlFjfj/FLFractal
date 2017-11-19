@@ -36,6 +36,10 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 		panic(err)
 	}
 
+	//l.Enable(gl.DEPTH_TEST)
+	gl.Enable(gl.BLEND)
+	//gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
 	return Program{Window, draw, update, time.Now()}
 }
 
