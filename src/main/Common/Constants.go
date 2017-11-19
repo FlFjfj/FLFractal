@@ -1,4 +1,4 @@
-package game
+package Common
 
 const (
 	WIDTH  = 800.0

@@ -2,8 +2,8 @@ package server
 
 import (
 	"github.com/go-gl/mathgl/mgl32"
-	"main/game"
 	"math"
+	"main/Common"
 )
 
 const (
@@ -13,8 +13,8 @@ const (
 type ServerCircle struct {
 	id       int
 	owner    int
-	position mgl32.Vec2
-	velocity mgl32.Vec2
+	Position mgl32.Vec2
+	Velocity mgl32.Vec2
 	size     float32
 	color    mgl32.Vec3
 }
@@ -34,20 +34,20 @@ func NewCircle(id int, owner int, size float32, position mgl32.Vec2, velocity mg
 }
 
 func (circle *ServerCircle) Update(delta float32) {
-	circle.position = circle.position.Add(circle.velocity.Mul(delta))
-	vLen := circle.velocity.Len()
+	circle.Position = circle.Position.Add(circle.Velocity.Mul(delta))
+	vLen := circle.Velocity.Len()
 	if vLen != 0 {
 		if vLen < acceleration*delta {
-			circle.velocity = mgl32.Vec2{0.0, 0.0}
+			circle.Velocity = mgl32.Vec2{0.0, 0.0}
 		} else {
-			circle.velocity = circle.velocity.Add(circle.velocity.Normalize().Mul(acceleration * delta))
+			circle.Velocity = circle.Velocity.Add(circle.Velocity.Normalize().Mul(acceleration * delta))
 		}
 	}
 
-	if circle.position.Len() > game.SIZE-circle.size {
-		circle.position = circle.position.Normalize().Mul(game.SIZE - circle.size)
-		a := math.Acos(float64(circle.position.Normalize().Dot(circle.velocity.Normalize())))
+	if circle.Position.Len() > Common.SIZE-circle.size {
+		circle.Position = circle.Position.Normalize().Mul(Common.SIZE - circle.size)
+		a := math.Acos(float64(circle.Position.Normalize().Dot(circle.Velocity.Normalize())))
 		rot := mgl32.Rotate2D(float32(a))
-		circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))
+		circle.Velocity = rot.Mul2x1(circle.Position.Normalize().Mul(-vLen))
 	}
 }

@@ -16,4 +16,5 @@ func NewServerProgram(update func(delta float32)) Program {
 func (program *Program) Update() {
 	program.update(float32(time.Now().Sub(program.last).Nanoseconds()) / 1000000000.0)
 	program.last = time.Now()
+	time.Sleep(time.Millisecond * 10)
 }

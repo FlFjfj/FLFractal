@@ -6,6 +6,7 @@ import (
 	"main/graphics"
 	"main/utils"
 	"math"
+	"main/Common"
 )
 
 var (
@@ -71,8 +72,8 @@ func (circle *Circle) Update(delta float32) {
 		}
 	}
 
-	if circle.position.Len() > SIZE-circle.size {
-		circle.position = circle.position.Normalize().Mul(SIZE - circle.size)
+	if circle.position.Len() > Common.SIZE-circle.size {
+		circle.position = circle.position.Normalize().Mul(Common.SIZE - circle.size)
 		a := math.Acos(float64(circle.position.Normalize().Dot(circle.velocity.Normalize())))
 		rot := mgl32.Rotate2D(float32(a))
 		circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))

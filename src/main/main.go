@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/go-gl/gl/v4.2-core/gl"
-	//"github.com/go-gl/mathgl/mgl32"
 	"main/game"
 	"main/graphics"
 	"main/utils"
 	"runtime"
+	"main/Common"
 )
 
 func init() {
@@ -14,10 +14,10 @@ func init() {
 }
 
 func main() {
-	program = graphics.NewGlfwProgram("World", game.WIDTH, game.HEIGHT, draw, update)
+	program = graphics.NewGlfwProgram("World", Common.WIDTH, Common.HEIGHT, draw, update)
 	defer program.Terminate()
 
-	cam = utils.NewOrthographicCamera(2*game.SIZE*game.WIDTH/game.HEIGHT, 2*game.SIZE)
+	cam = utils.NewOrthographicCamera(2*Common.SIZE*Common.WIDTH/Common.HEIGHT, 2*Common.SIZE)
 	world = game.NewWorld(cam)
 
 	for !program.Window.ShouldClose() {

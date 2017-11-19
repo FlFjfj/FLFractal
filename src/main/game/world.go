@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"main/Common"
 )
 
 type World struct {
@@ -26,8 +27,8 @@ type World struct {
 	circles map[int]*Circle
 	lastId  int
 
-	actionQueue  chan net.ActionMessage
-	messageQueue chan net.GeneralMessage
+	actionQueue  chan Common.ActionMessage
+	messageQueue chan Common.GeneralMessage
 	mutex        sync.Mutex
 }
 
@@ -36,7 +37,7 @@ func NewWorld(camera utils.OrthographicCamera) World {
 	transformLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_ObjTrans\x00"))
 	projectionLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_ProjTrans\x00"))
 	circle := utils.NewMesh(utils.IdentCircle(100))
-	object := utils.NewObject(&circle, SIZE, transformLoc)
+	object := utils.NewObject(&circle, Common.SIZE, transformLoc)
 
 	result := World{
 		camera,
@@ -46,8 +47,8 @@ func NewWorld(camera utils.OrthographicCamera) World {
 		0,
 		make(map[int]*Circle),
 		-1,
-		make(chan net.ActionMessage, 10000),
-		make(chan net.GeneralMessage, 10000),
+		make(chan Common.ActionMessage, 10000),
+		make(chan Common.GeneralMessage, 10000),
 		sync.Mutex{},
 	}
 
@@ -85,10 +86,11 @@ var (
 	choosenId      = -1
 )
 
-func (world *World) processMouse(window glfw.Window, actionQueue chan net.ActionMessage) {
+func (world *World) processMouse(window glfw.Window, actionQueue chan Common.ActionMessage) {
 	state := window.GetMouseButton(glfw.MouseButtonLeft) == glfw.Press
 	x64, y64 := window.GetCursorPos()
-	position := mgl32.Vec2{float32((x64/WIDTH - 0.5) * 2 * SIZE * WIDTH / HEIGHT), float32(-(y64/HEIGHT - 0.5) * SIZE * 2)}
+	position := mgl32.Vec2{float32((x64/Common.WIDTH - 0.5) * 2 * Common.SIZE * Common.WIDTH / Common.HEIGHT),
+	float32(-(y64/Common.HEIGHT - 0.5) * Common.SIZE * 2)}
 
 	if state && !lastMouseState {
 		lastMouseState = true
@@ -104,7 +106,7 @@ func (world *World) processMouse(window glfw.Window, actionQueue chan net.Action
 		if choosenId != -1 && world.circles[choosenId] != nil {
 			direction := world.circles[choosenId].position.Sub(position)
 
-			actionQueue <- net.ActionMessage{choosenId, direction.X(), direction.Y()}
+			actionQueue <- Common.ActionMessage{choosenId, direction.X(), direction.Y()}
 
 			choosenId = -1
 		}
@@ -150,11 +152,11 @@ func (world *World) processMessages() {
 			if ok {
 				fmt.Printf("Message: %+v\n", message)
 				switch message.TYPE {
-				case net.ConnectMessage:
+				case Common.ConnectMessage:
 					{
 						world.owner_id = message.OWNER
 					}
-				case net.CreateMessage:
+				case Common.CreateMessage:
 					{
 						if message.ID > world.lastId {
 							world.lastId = message.ID
@@ -166,19 +168,23 @@ func (world *World) processMessages() {
 							mgl32.Vec2{message.VX, message.VY},
 							mgl32.Vec3{message.R, message.G, message.B})
 					}
-				case net.DestroyMessage:
+				case Common.DestroyMessage:
 					{
 						world.circles[message.ID] = nil
 					}
-				case net.UpdateMessage:
+				case Common.UpdateMessage:
 					{
-						world.circles[message.ID].size = message.SIZE
+						if world.circles[message.ID] != nil {
+							world.circles[message.ID].size = message.SIZE
+						}
 					}
-				case net.SynchonizeMessage:
+				case Common.SynchonizeMessage:
 					{
 						for _, data := range message.DATA {
-							world.circles[data.ID].position = mgl32.Vec2{data.X, data.Y}
-							world.circles[data.ID].velocity = mgl32.Vec2{data.VX, data.VY}
+							if world.circles[data.ID] != nil {
+								world.circles[data.ID].position = mgl32.Vec2{data.X, data.Y}
+								world.circles[data.ID].velocity = mgl32.Vec2{data.VX, data.VY}
+							}
 						}
 					}
 				}

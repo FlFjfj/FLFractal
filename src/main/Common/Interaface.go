@@ -1,6 +1,8 @@
-package net
+package Common
 
-import "encoding/gob"
+import (
+	"encoding/gob"
+)
 
 const (
 	CreateMessage     byte = 0
@@ -38,10 +40,10 @@ type SynchonizeData struct {
 	VX, VY float32
 }
 
-/*type SynchronizationMessage struct {
-	TYPE byte
-	DATA []SynchonizeData
-}*/
+func SynchronizationMessage(data []SynchonizeData) GeneralMessage {
+	return GeneralMessage{SynchonizeMessage, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, data}
+}
 
 type ActionMessage struct {
 	ID   int

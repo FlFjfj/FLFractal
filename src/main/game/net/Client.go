@@ -4,10 +4,11 @@ import (
 	"encoding/gob"
 	"net"
 	"fmt"
+	"main/Common"
 )
 
-func Connect(address string, actionQueue chan ActionMessage, messageQueue chan GeneralMessage) {
-	RegisterInterface()
+func Connect(address string, actionQueue chan Common.ActionMessage, messageQueue chan Common.GeneralMessage) {
+	Common.RegisterInterface()
 
 	serverAddress, _ := net.ResolveTCPAddr("tcp", address)
 	connection, _ := net.DialTCP("tcp", nil, serverAddress)
@@ -16,16 +17,16 @@ func Connect(address string, actionQueue chan ActionMessage, messageQueue chan G
 	go processWrite(connection, actionQueue)
 }
 
-func processRead(conn net.Conn, messageQueue chan GeneralMessage) {
+func processRead(conn net.Conn, messageQueue chan Common.GeneralMessage) {
 	decoder := gob.NewDecoder(conn)
 	for {
-		var action = GeneralMessage{}
+		var action = Common.GeneralMessage{}
 		decoder.Decode(&action)
 		messageQueue <- action
 	}
 }
 
-func processWrite(conn net.Conn, actionQueue chan ActionMessage) {
+func processWrite(conn net.Conn, actionQueue chan Common.ActionMessage) {
 	encoder := gob.NewEncoder(conn)
 	for {
 		action :=<- actionQueue

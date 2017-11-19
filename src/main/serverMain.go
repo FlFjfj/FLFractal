@@ -1,7 +1,6 @@
 package main
 
 import (
-	"main/game/net"
 	"main/server"
 	"runtime"
 )
@@ -12,7 +11,6 @@ func init() {
 
 func main() {
 	serverProgram = server.NewServerProgram(updateServer)
-	net.RegisterInterface()
 	serverWorld = server.NewServerWorld()
 
 	for {
@@ -22,7 +20,7 @@ func main() {
 
 var (
 	serverProgram server.Program
-	serverWorld   server.ServerWorld
+	serverWorld   *server.ServerWorld
 )
 
 func updateServer(delta float32) {
