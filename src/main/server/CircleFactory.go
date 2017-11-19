@@ -6,6 +6,7 @@ import (
 	"time"
 	"github.com/go-gl/mathgl/mgl32"
 	"main/Common"
+	"math"
 )
 
 type CircleFactory struct {
@@ -31,10 +32,11 @@ func (factory *CircleFactory) Update(delta float32, world *ServerWorld) {
 			factory.wait += randBetween(minDelta, maxDelta)
 
 			size := randBetween(minSize*Common.SIZE, maxSize*Common.SIZE)
+			angle, len := randBetween(0, 2 * math.Pi), randBetween(0, Common.SIZE - size)
 
 			circle := NewCircle(
 				world.nextId(), -1, size,
-				mgl32.Vec2{randBetween(0, Common.SIZE-size), randBetween(0, Common.SIZE-size)},
+				mgl32.Vec2{float32(math.Cos(float64(angle))), float32(math.Sin(float64(angle)))}.Mul(len),
 				mgl32.Vec2{0.0, 0.0},
 				mgl32.Vec3{0.0, 0.6, 0.0})
 			world.circles[circle.id] = circle

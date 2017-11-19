@@ -112,7 +112,8 @@ func NewServerWorld() *ServerWorld {
 			position := mgl32.Vec2{action.X, action.Y}
 			newSize := result.circles[action.ID].size / 2
 			direction := result.circles[action.ID].Position.Sub(position).Normalize()
-			power := result.circles[action.ID].Position.Sub(position).Len()
+			power := float32(math.Max(float64(result.circles[action.ID].Position.Sub(position).Len()), 0.5))
+
 			first := NewCircle(
 				result.nextId(), result.circles[action.ID].owner, newSize,
 				result.circles[action.ID].Position.Add(direction.Mul(newSize)),
@@ -203,10 +204,11 @@ func (world *ServerWorld) processCollision() {
 
 				if ratio >= 1.2 && dist < first.size {
 				//	println("Eaten")
+					newSize := float32(math.Sqrt(float64((first.size * first.size) + (second.size * second.size))))
 					world.messageQueue <- Common.DestructionMessage(second.id)
-					world.messageQueue <- Common.UpdationMessage(first.id, first.size+second.size)
+					world.messageQueue <- Common.UpdationMessage(first.id, newSize)
 
-					first.size += second.size
+					first.size = newSize
 					world.circles[second.id] = nil
 				}
 			}
