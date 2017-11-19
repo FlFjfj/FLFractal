@@ -84,21 +84,18 @@ func (world *World) processMouse(window glfw.Window) {
 	state := window.GetMouseButton(glfw.MouseButtonLeft) == glfw.Press
 	x64, y64 := window.GetCursorPos()
 	position := mgl32.Vec2{float32((x64/WIDTH - 0.5) * 2 * SIZE * WIDTH / HEIGHT), float32(-(y64/HEIGHT - 0.5) * SIZE * 2)}
-	println(int(position.X()*100), int(position.Y()*100))
 
 	if state && !lastMouseState {
 		lastMouseState = true
 
 		for _, circle := range world.circles {
 			if circle != nil && circle.owns && circle.position.Sub(position).Len() < circle.size {
-				print("Chosen!")
 				choosenId = circle.id
 			}
 		}
 
 	} else if !state && lastMouseState {
 		lastMouseState = false
-		println("Mouse Up")
 		if choosenId != -1 && world.circles[choosenId] != nil {
 			newSize := world.circles[choosenId].size / 2
 			direction := world.circles[choosenId].position.Sub(position).Normalize()
@@ -130,9 +127,13 @@ func (world *World) processCollision() {
 				ratio := math.Max(float64(first.size / second.size), float64(second.size / first.size))
 
 				if ratio < 1.2 && dist < first.size + second.size {
-					u1, u2 := first.velocity, second.velocity
-					first.velocity = u1.Mul(first.size - first.size).Add(u2.Mul(2 * second.size)).Mul(1/(first.size + second.size))
-					second.velocity = u2.Mul(second.size - first.size).Add(u1.Mul(2 * first.size)).Mul(1/(first.size + second.size))
+					deltaSF := first.position.Sub(second.position).Normalize()
+					projF := deltaSF.Mul(deltaSF.Dot(first.velocity))
+					projS := deltaSF.Mul(deltaSF.Dot(second.velocity))
+					projD := projF.Sub(projS)
+
+					first.velocity = first.velocity.Sub(projD)
+					second.velocity = second.velocity.Add(projD)
 				}
 
 				if first.size < second.size {

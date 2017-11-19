@@ -14,8 +14,8 @@ const (
 	minDelta = 0.5
 	maxDelta = 5
 
-	minSize = 0.01
-	maxSize = 0.05
+	minSize = 0.05
+	maxSize = 0.03
 )
 
 func NewFactory() CircleFactory {

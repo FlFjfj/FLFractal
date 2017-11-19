@@ -15,7 +15,7 @@ var (
 	projLoc      int32
 	colorLoc     int32
 	mesh         utils.Mesh
-	acceleration float32 = -1
+	acceleration float32 = -7
 )
 
 type Circle struct {
