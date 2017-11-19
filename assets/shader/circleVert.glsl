@@ -7,8 +7,8 @@ uniform vec3 u_Color;
 uniform float u_Delta;
 
 layout (location = 0) in vec4 a_Position;
-layout (location = 1) in vec2 a_TexCoord;
-layout (location = 2) in vec3 a_VertNormal;
+layout (location = 2) in vec2 a_TexCoord;
+layout (location = 1) in vec3 a_VertNormal;
 
 out vec2 v_TexCoord;
 out vec3 v_VertNormal;

@@ -20,6 +20,7 @@ type World struct {
 	shader  graphics.ShaderProgram
 	object  utils.GameObject
 	projLoc int32
+	deltaLoc int32
 
 	owner_id int
 
@@ -34,6 +35,7 @@ type World struct {
 func NewWorld(camera utils.OrthographicCamera) World {
 	worldShader := graphics.NewShaderProgram("assets/shader/worldVert.glsl", "assets/shader/worldFrag.glsl")
 	transformLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_ObjTrans\x00"))
+	deltaLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_Delta\x00"));
 	projectionLoc := gl.GetUniformLocation(uint32(worldShader), gl.Str("u_ProjTrans\x00"))
 	circle := utils.NewMesh(utils.IdentCircle(100))
 	object := utils.NewObject(&circle, Common.SIZE, transformLoc)
@@ -43,6 +45,7 @@ func NewWorld(camera utils.OrthographicCamera) World {
 		worldShader,
 		object,
 		projectionLoc,
+		deltaLoc,
 		0,
 		make(map[int]*Circle),
 		-1,
@@ -56,13 +59,13 @@ func NewWorld(camera utils.OrthographicCamera) World {
 }
 
 func (world *World) Update(delta float32, window glfw.Window) {
-	lastDelta += delta
 	for key := range world.circles {
 		if world.circles[key] != nil {
 			world.circles[key].Update(delta)
 		}
 	}
 
+	lastDelta += delta
 	world.processMouse(window, world.actionQueue)
 	world.processCollision()
 	world.processMessages()
@@ -71,6 +74,7 @@ func (world *World) Update(delta float32, window glfw.Window) {
 func (world *World) Draw(worldTrans mgl32.Mat4) {
 	world.shader.Begin()
 	gl.UniformMatrix4fv(world.projLoc, 1, false, &worldTrans[0])
+	gl.Uniform1f(world.deltaLoc, lastDelta)
 	world.object.Draw()
 	world.shader.End()
 

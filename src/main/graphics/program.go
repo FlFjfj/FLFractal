@@ -36,6 +36,8 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 		panic(err)
 	}
 
+	gl.Enable(gl.BLEND)
+
 	return Program{Window, draw, update, time.Now()}
 }
 
