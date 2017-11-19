@@ -9,7 +9,6 @@ import (
 	"main/utils"
 	"math"
 	//"os"
-	"fmt"
 	"os"
 	"sync"
 	"main/Common"
@@ -139,7 +138,7 @@ func (world *World) processMessages() {
 	case message, ok := <-world.messageQueue:
 		{
 			if ok {
-				fmt.Printf("Message: %+v\n", message)
+				//fmt.Printf("Message: %+v\n", message)
 				switch message.TYPE {
 				case Common.ConnectMessage:
 					{

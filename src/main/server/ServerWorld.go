@@ -106,7 +106,7 @@ func NewServerWorld() *ServerWorld {
 	go func() {
 		for {
 			action := <-result.actionQueue
-			fmt.Printf("Action: %+v\n", action)
+			//fmt.Printf("Action: %+v\n", action)
 			result.mutex.Lock()
 			//println("lock Action process")
 			position := mgl32.Vec2{action.X, action.Y}
@@ -138,7 +138,7 @@ func NewServerWorld() *ServerWorld {
 
 	go func() {
 		for {
-			time.Sleep(10 * time.Millisecond)
+			time.Sleep(50 * time.Millisecond)
 			result.mutex.Lock()
 			//println("lock sync process")
 
@@ -183,10 +183,10 @@ func (world *ServerWorld) processCollision() {
 				dist := first.Position.Sub(second.Position).Len()
 				ratio := math.Max(float64(first.size/second.size), float64(second.size/first.size))
 
-				fmt.Printf("First: %+v, Second: %+v, Dist: %f, ration: %f\n", first, second, dist, ratio)
+			//	fmt.Printf("First: %+v, Second: %+v, Dist: %f, ration: %f\n", first, second, dist, ratio)
 
 				if ratio < 1.2 && dist < first.size+second.size {
-					println("Crashed")
+					//println("Crashed")
 					deltaSF := first.Position.Sub(second.Position).Normalize()
 					projF := deltaSF.Mul(deltaSF.Dot(first.Velocity))
 					projS := deltaSF.Mul(deltaSF.Dot(second.Velocity))
@@ -201,7 +201,7 @@ func (world *ServerWorld) processCollision() {
 				}
 
 				if ratio >= 1.2 && dist < first.size {
-					println("Eaten")
+				//	println("Eaten")
 					world.messageQueue <- Common.DestructionMessage(second.id)
 					world.messageQueue <- Common.UpdationMessage(first.id, first.size+second.size)
 
