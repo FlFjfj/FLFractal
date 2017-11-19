@@ -5,7 +5,7 @@ import (
 	"github.com/go-gl/mathgl/mgl32"
 	"main/graphics"
 	"main/utils"
-  "math"
+	"math"
 )
 
 var (
@@ -21,16 +21,15 @@ var (
 type Circle struct {
 	id       int
 	object   utils.GameObject
-	owns     bool
+	owner    int
 	position mgl32.Vec2
 	velocity mgl32.Vec2
 	size     float32
 	color    mgl32.Vec3
 }
 
-func NewCircle(id int, owns bool, size float32, position mgl32.Vec2, velocity mgl32.Vec2, color mgl32.Vec3) *Circle {
+func NewCircle(id int, owner int, size float32, position mgl32.Vec2, velocity mgl32.Vec2, color mgl32.Vec3) *Circle {
 	if !isInit {
-		println("Init circle")
 		isInit = true
 		mesh = utils.NewMesh(utils.IdentCircle(20))
 		circleShader = graphics.NewShaderProgram("assets/shader/circleVert.glsl", "assets/shader/circleFrag.glsl")
@@ -43,7 +42,7 @@ func NewCircle(id int, owns bool, size float32, position mgl32.Vec2, velocity mg
 	*circle = Circle{
 		id,
 		utils.NewObject(&mesh, size, objLoc),
-		owns,
+		owner,
 		position,
 		velocity,
 		size,
@@ -72,11 +71,11 @@ func (circle *Circle) Update(delta float32) {
 		}
 	}
 
-	if circle.position.Len() > SIZE - circle.size {
+	if circle.position.Len() > SIZE-circle.size {
 		circle.position = circle.position.Normalize().Mul(SIZE - circle.size)
 		a := math.Acos(float64(circle.position.Normalize().Dot(circle.velocity.Normalize())))
 		rot := mgl32.Rotate2D(float32(a))
-    circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))
+		circle.velocity = rot.Mul2x1(circle.position.Normalize().Mul(-vLen))
 	}
 
 	circle.object.Update(circle.position, circle.size)
