@@ -47,7 +47,14 @@ func (circle *ServerCircle) Update(delta float32) {
 	if circle.Position.Len() > Common.SIZE-circle.size {
 		circle.Position = circle.Position.Normalize().Mul(Common.SIZE - circle.size)
 		a := math.Acos(float64(circle.Position.Normalize().Dot(circle.Velocity.Normalize())))
-		rot := mgl32.Rotate2D(float32(a))
+		var minus float32
+		if math.Signbit(float64(circle.Position.X() * circle.Velocity.Y() - circle.Velocity.X()+circle.Position.Y())) {
+			minus = 1;
+		} else {
+			minus = -1;
+		}
+
+		rot := mgl32.Rotate2D(minus*float32(a))
 		circle.Velocity = rot.Mul2x1(circle.Position.Normalize().Mul(-vLen))
 	}
 }

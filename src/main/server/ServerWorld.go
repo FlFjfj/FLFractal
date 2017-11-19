@@ -110,7 +110,7 @@ func NewServerWorld() *ServerWorld {
 			result.mutex.Lock()
 			//println("lock Action process")
 			position := mgl32.Vec2{action.X, action.Y}
-			newSize := result.circles[action.ID].size / 2
+			newSize := result.circles[action.ID].size/float32(math.Sqrt(2))
 			direction := result.circles[action.ID].Position.Sub(position).Normalize()
 			power := float32(math.Max(float64(result.circles[action.ID].Position.Sub(position).Len()), 0.5))
 

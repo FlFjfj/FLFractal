@@ -69,8 +69,8 @@ func IdentCircle(segment int) []float32 {
 		data[i*3*9+9+2] = 0
 		data[i*3*9+9+3] = 1
 
-		data[i*3*9+9+4] = data[i*3*9+9+0]
-		data[i*3*9+9+5] = data[i*3*9+9+1]
+		data[i*3*9+9+4] = data[i*3*9+9+1]
+		data[i*3*9+9+5] = data[i*3*9+9+0]
 		data[i*3*9+9+6] = 0
 
 		data[i*3*9+9+7] = data[i*3*9+9+0]/2 + 0.5

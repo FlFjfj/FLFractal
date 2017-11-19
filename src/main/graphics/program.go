@@ -24,7 +24,7 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 	glfw.WindowHint(glfw.ContextVersionMinor, 2)
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 
-	Window, err := glfw.CreateWindow(width, height, title, nil, nil)
+	Window, err := glfw.CreateWindow(width, height, title, glfw.GetPrimaryMonitor(), nil)
 	if err != nil {
 		panic(err)
 	}
